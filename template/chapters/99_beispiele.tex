@@ -1,0 +1,89 @@
+% !TEX root = ../report.tex
+%%
+%% Examples of frequently used elements.
+%% This chapter is only a cheat sheet: copy what you need into your own
+%% chapters and then delete the line \input{chapters/99_beispiele} in
+%% report.tex.
+%%
+\chapter{\DeEn{Beispiele (bitte löschen)}{Examples (please delete)}}\label{chap:beispiele}
+
+\section{Zitate und Verweise}
+Ein Literaturverweis: Grundlagen des statistischen Lernens finden sich in
+\cite{hastie2009}, das Vorgehensmodell CRISP-DM in \cite{chapman2000}.
+Mit natbib geht auch \citet{pedregosa2011} (Autor im Text) oder ein Verweis
+mit Seitenangabe \cite[S.~42]{hastie2009}.
+Querverweise: \autoref{fig:lernkurve}, \autoref{tab:metriken} und
+\autoref{lst:sklearn}.
+
+\section{Abkürzungen, Glossar und Symbole}
+Beim ersten Auftreten wird eine Abkürzung ausgeschrieben: \gls{ac:ml}.
+Danach nur noch die Kurzform: \gls{ac:ml}. Ein Glossarbegriff: \gls{gl:feature}.
+Ein Symbol: Die Verlustfunktion \gls{sy:loss} wird minimiert.
+
+\section{Abbildungen}
+\autoref{fig:lernkurve} zeigt ein mit \texttt{pgfplots} direkt in \LaTeX{}
+erzeugtes Diagramm. Bilddateien (PDF, PNG, JPG) legt man in \texttt{figures/}
+ab und bindet sie z.\,B. so ein:
+\begin{lstlisting}[language={[LaTeX]TeX}, numbers=none]
+\includenamedimage[0.7]{dateiname}{Bildunterschrift}
+\end{lstlisting}
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        width=0.8\textwidth, height=6cm,
+        xlabel={\DeEn{Epoche}{Epoch}}, ylabel={\DeEn{Verlust}{Loss}},
+        grid=major, legend pos=north east]
+      \addplot[thick, color=IAccent, domain=1:50, samples=50] {exp(-x/10) + 0.1};
+      \addlegendentry{Training}
+      \addplot[thick, dashed, color=gray, domain=1:50, samples=50] {exp(-x/12) + 0.15 + 0.002*x};
+      \addlegendentry{\DeEn{Validierung}{Validation}}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{\DeEn{Beispielhafte Lernkurve}{Example learning curve}}
+  \label{fig:lernkurve}
+\end{figure}
+
+\section{Tabellen}
+\begin{table}[htbp]
+  \centering
+  \caption{\DeEn{Vergleich von Modellen}{Comparison of models}}
+  \label{tab:metriken}
+  \begin{tabular}{lSS}
+    \toprule
+    {Modell} & {Accuracy} & {F1-Score} \\
+    \midrule
+    Logistische Regression & 0.842 & 0.811 \\
+    Random Forest          & 0.887 & 0.864 \\
+    Gradient Boosting      & 0.901 & 0.879 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Quellcode}
+Kurzer Code im Text: \lstinline|model.fit(X, y)|.
+
+\begin{lstlisting}[caption={\DeEn{Training eines Modells mit scikit-learn}{Training a model with scikit-learn}}, label={lst:sklearn}]
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+
+# Daten aufteilen und Modell trainieren
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+print(f"Accuracy: {model.score(X_test, y_test):.3f}")
+\end{lstlisting}
+
+\section{Formeln und Einheiten}
+Die mittlere quadratische Abweichung ist definiert als
+\begin{equation}
+  \mathrm{MSE} = \frac{1}{n} \sum_{i=1}^{n} \left( y_i - \hat{y}_i \right)^2 .
+  \label{eq:mse}
+\end{equation}
+Einheiten mit \texttt{siunitx}: Das Training dauerte \SI{12.5}{\minute} auf
+\num{1250000} Datensätzen.
+
+\section{Notizen}
+\todo{Nur im Entwurfsmodus sichtbar.}
+Mit \verb|\todo{...}| lassen sich Anmerkungen am Rand setzen.

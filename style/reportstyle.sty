@@ -1,0 +1,139 @@
+%%
+%% reportstyle.sty
+%% Style file for reports at HAW Kiel
+%%
+%% Author:  Yaacoub Harkat
+%% Based on the thesis template of HAW Hamburg by Prof. Dr. Thomas Lehmann
+%% and contributors (see README.md, section "Credits").
+%%
+%% Loads all packages and defines the basic layout.
+%% Users normally do not need to change anything here – all settings are made
+%% in configuration/configuration.tex of the individual report.
+%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{\@currpath reportstyle}[2026/10/05 v1.1 HAW Kiel report template]
+
+% Path to the style folder (normally set in report.tex)
+\providecommand{\StyleDir}{../style}
+
+%% ---------------------------------------------------------------------------
+%% Language, encoding, fonts
+%% ---------------------------------------------------------------------------
+\RequirePackage[utf8]{inputenc}           % UTF-8 (default since LaTeX 2018)
+\RequirePackage[T1]{fontenc}
+\RequirePackage[english,ngerman]{babel}   % language is selected via \documentLanguage
+\RequirePackage[autostyle=true]{csquotes} % \enquote{...} with language-aware quotes
+\RequirePackage{lmodern}                  % Latin Modern as serif font
+\RequirePackage[scaled=0.92]{helvet}      % Helvetica as sans-serif font (cover, \fontStyle{sans})
+\IfFileExists{zi4.sty}                    % Inconsolata for code, Courier as fallback
+  {\RequirePackage[varqu,scaled=0.95]{zi4}}
+  {\RequirePackage{courier}}
+\RequirePackage{microtype}                % micro-typography
+\setkomafont{disposition}{\normalfont\bfseries} % headings in the text font
+
+%% ---------------------------------------------------------------------------
+%% Colours, mathematics, units
+%% ---------------------------------------------------------------------------
+\RequirePackage[dvipsnames,svgnames,table]{xcolor}
+\definecolor{IAccent}{HTML}{004B87}       % overridden by \accentColor
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{siunitx}                  % \SI{3}{\milli\second}, \num{12345.6}
+
+%% ---------------------------------------------------------------------------
+%% Figures, tables, lists
+%% ---------------------------------------------------------------------------
+\RequirePackage{graphicx}
+\graphicspath{{./figures/}{./chapters/}}  % put images into figures/
+\RequirePackage[skip=1ex]{caption}
+\RequirePackage{subcaption}               % several images side by side
+\RequirePackage{booktabs}                 % \toprule, \midrule, \bottomrule
+\RequirePackage{tabularx}
+\RequirePackage{multirow}
+\RequirePackage{makecell}
+\RequirePackage{float}                    % placement [H]
+\RequirePackage{enumitem}
+\RequirePackage{tikz}
+\RequirePackage{pgfplots}                 % plots directly in LaTeX
+\pgfplotsset{compat=1.16}
+
+%% ---------------------------------------------------------------------------
+%% Source code (listings)
+%% ---------------------------------------------------------------------------
+\RequirePackage{listings}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.95,0.95,0.95}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{codeorange}{rgb}{0.72,0.24,0.13}
+\lstdefinestyle{reportcode}{
+  language=Python,
+  columns=fullflexible,
+  backgroundcolor=\color{codegray},
+  commentstyle=\color{codegreen},
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{codeorange},
+  numberstyle=\tiny\color{gray},
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  breakatwhitespace=false,
+  captionpos=b,
+  keepspaces=true,
+  numbers=left,
+  numbersep=5pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=4,
+  frame=none,
+  literate={ä}{{\"a}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+           {Ä}{{\"A}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1 {ß}{{\ss}}1
+}
+\lstset{style=reportcode}
+
+%% ---------------------------------------------------------------------------
+%% Bibliography, links, notes
+%% ---------------------------------------------------------------------------
+\RequirePackage{natbib}                   % citation style via \citationStyle
+\RequirePackage{notoccite}                % citations in captions do not affect numbering
+\RequirePackage{xurl}                     % line breaks in URLs
+\RequirePackage{todonotes}                % \todo{...}; hidden with \Draft{no}
+\RequirePackage{etoolbox}
+
+\RequirePackage[onehalfspacing]{setspace} % line spacing via \lineSpacing
+
+\RequirePackage[
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=IAccent,
+  bookmarksnumbered=true
+]{hyperref}
+\pdfstringdefDisableCommands{\def\\{ }}   % remove line breaks of the title in PDF metadata
+
+\RequirePackage[
+  nonumberlist,                           % no page numbers in the glossary
+  acronym,                                % list of abbreviations
+  symbols,                                % list of symbols
+  toc                                     % lists appear in the table of contents
+]{glossaries}
+
+%% ---------------------------------------------------------------------------
+%% Headers and footers
+%% ---------------------------------------------------------------------------
+\RequirePackage[automark,headsepline]{scrlayer-scrpage}
+\clearpairofpagestyles
+\automark{chapter}
+\ihead{\headmark}
+\ofoot*{\pagemark}
+\pagestyle{scrheadings}
+
+%% ---------------------------------------------------------------------------
+%% Template logic
+%% ---------------------------------------------------------------------------
+\RequirePackage{configurationcommands}
+\RequirePackage{convenience}
+
+% avoid widows and orphans
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000

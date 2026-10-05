@@ -1,0 +1,454 @@
+%%
+%% configurationcommands.sty
+%% Configuration commands of the HAW Kiel report template
+%%
+%% Author:  Yaacoub Harkat
+%% Based on the thesis template of HAW Hamburg by Prof. Dr. Thomas Lehmann
+%% and contributors (see README.md, section "Credits").
+%%
+%% Structure:
+%%   1. Helper macros
+%%   2. Text fields                \reportTitle{...}, \reportAuthor{...}, ...
+%%   3. Switches (yes/no)          \NDA{yes}, \ListOfFigures{no}, ...
+%%   4. Choices                    \reportKind{project}, \Cover{HAWKiel}, ...
+%%   5. Page layout                \pageMargins{...}
+%%   6. Resolving the configuration (runs automatically at \begin{document})
+%%   7. Building blocks for report.tex   \ICoverPage, \IListOfFigures, ...
+%%
+%% Users do not need to change anything here. How to add report kinds,
+%% study programmes or cover pages is described in README.md
+%% ("Extending the template").
+%%
+%% Convention: all internal macros start with \I...
+%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{\@currpath configurationcommands}[2026/10/05 v1.1 Configuration of the HAW Kiel report template]
+
+\RequirePackage{ifthen}
+\RequirePackage{etoolbox}
+
+%% ===========================================================================
+%% 1. Helper macros
+%% ===========================================================================
+
+% Language switch: \IbyLang{German text}{English text}
+\newif\ifIEnglish
+\newcommand{\IbyLang}[2]{\ifIEnglish#2\else#1\fi}
+
+% Error message for invalid values
+\newcommand{\IConfigError}[2]{%
+  \PackageError{configurationcommands}%
+    {Invalid value '#2' for the command #1}%
+    {See configuration/configuration.tex or README.md for the allowed values.}}
+
+% Define a text field: \IdefineField{name}{default}
+%   -> user command \name{...}, stored in \Iname
+\newcommand{\IdefineField}[2]{%
+  \expandafter\newcommand\csname I#1\endcsname{#2}%
+  \expandafter\newcommand\csname #1\endcsname[1]{%
+    \expandafter\renewcommand\csname I#1\endcsname{##1}}}
+
+% Define a switch: \IdefineSwitch{Name}{yes|no}
+%   -> user command \Name{yes|no}, query with \ifIName ... \fi
+\newcommand{\IsetSwitch}[2]{%
+  \ifthenelse{\equal{#2}{yes}}{\csname I#1true\endcsname}{%
+    \ifthenelse{\equal{#2}{no}}{\csname I#1false\endcsname}{%
+      \IConfigError{#1}{#2}}}}
+\newcommand{\IdefineSwitch}[2]{%
+  \expandafter\newif\csname ifI#1\endcsname
+  \IsetSwitch{#1}{#2}%
+  \expandafter\newcommand\csname #1\endcsname[1]{\IsetSwitch{#1}{##1}}}
+
+% Title without manual line breaks (\\ -> space), e.g. for running text
+\newcommand{\Iinline}[1]{%
+  \begingroup\def\\{\unskip\space\ignorespaces}#1\endgroup}
+
+%% ===========================================================================
+%% 2. Text fields (empty = not shown)
+%% ===========================================================================
+
+% Title and author(s)
+\IdefineField{reportTitle}{Title of the Report}
+\IdefineField{reportSubtitle}{}
+\IdefineField{reportTitleDE}{}      % for the German abstract; empty = \reportTitle
+\IdefineField{reportTitleEN}{}      % for the English abstract; empty = \reportTitle
+\IdefineField{reportAuthor}{First Name Last Name}
+\IdefineField{matriculationNumber}{}
+\IdefineField{authorEmail}{}
+\IdefineField{authorAddress}{}      % optional, shown on \Cover{Leitfaden}
+
+% Course
+\IdefineField{moduleName}{}
+\IdefineField{semester}{}           % academic term, e.g. "Winter term 2026/27"
+\IdefineField{semesterOfStudy}{}    % semester of study ("Fachsemester"), e.g. "2"
+\IdefineField{cooperationPartner}{}
+
+% Submission
+\IdefineField{submissionDate}{\today}
+\IdefineField{submissionPlace}{Kiel}
+
+% Abstract
+\IdefineField{keywordsDE}{}
+\IdefineField{keywordsEN}{}
+\IdefineField{abstractDE}{}
+\IdefineField{abstractEN}{}
+
+% Tools based on generative AI (for \AIStatement{yes})
+\IdefineField{aiUsage}{}
+
+% Logo and colour
+\IdefineField{logoFile}{\StyleDir/logo/haw-kiel-logo}  % without file extension
+\IdefineField{logoHeight}{18mm}
+\IdefineField{accentColor}{004B87}                     % HTML colour code without #
+
+% Bibliography
+\IdefineField{bibliographyFile}{literature}
+
+% German alias for the semester of study
+\newcommand{\fachsemester}[1]{\semesterOfStudy{#1}}
+
+% Supervisors – the optional argument overrides the label
+%   \firstSupervisor{Prof. Dr. X}             -> "Supervisor" or "First examiner"
+%   \firstSupervisor[Lecturer]{Prof. Dr. X}   -> custom label
+\newcommand{\IfirstSupervisor}{}
+\newcommand{\IfirstSupervisorLabel}{}
+\newcommand{\firstSupervisor}[2][]{%
+  \renewcommand{\IfirstSupervisor}{#2}\renewcommand{\IfirstSupervisorLabel}{#1}}
+\newcommand{\IsecondSupervisor}{}
+\newcommand{\IsecondSupervisorLabel}{}
+\newcommand{\secondSupervisor}[2][]{%
+  \renewcommand{\IsecondSupervisor}{#2}\renewcommand{\IsecondSupervisorLabel}{#1}}
+
+% University (German / English) and short name
+\newcommand{\IuniversityDE}{Hochschule für Angewandte Wissenschaften Kiel}
+\newcommand{\IuniversityEN}{Kiel University of Applied Sciences}
+\newcommand{\IuniversityShort}{HAW Kiel}
+\newcommand{\university}[3][HAW Kiel]{%
+  \renewcommand{\IuniversityShort}{#1}%
+  \renewcommand{\IuniversityDE}{#2}\renewcommand{\IuniversityEN}{#3}}
+
+%% ===========================================================================
+%% 3. Switches (yes/no) with default value
+%% ===========================================================================
+\IdefineSwitch{NDA}{no}               % confidentiality notice on the cover
+\IdefineSwitch{Logo}{yes}             % logo on the cover
+\IdefineSwitch{TitlePage}{no}         % additional inner title page
+\IdefineSwitch{AbstractPage}{yes}     % abstract page
+\IdefineSwitch{TableOfContents}{yes}  % table of contents
+\IdefineSwitch{ListOfFigures}{yes}    % list of figures
+\IdefineSwitch{ListOfTables}{yes}     % list of tables
+\IdefineSwitch{ListOfListings}{no}    % list of listings
+\IdefineSwitch{ListOfAcronyms}{yes}   % list of abbreviations
+\IdefineSwitch{ListOfSymbols}{no}     % list of symbols
+\IdefineSwitch{Glossary}{no}          % glossary at the end
+\IdefineSwitch{Bibliography}{yes}     % bibliography
+\IdefineSwitch{Statement}{yes}        % declaration of authorship
+\IdefineSwitch{AIStatement}{no}       % paragraph on AI tools in the declaration
+\IdefineSwitch{Draft}{no}             % draft: todo notes + date in the footer
+
+% Compatibility with the HAW Hamburg template (old spelling)
+\newcommand{\ListOfAccronyms}[1]{\ListOfAcronyms{#1}}
+
+%% ===========================================================================
+%% 4. Choices with default value
+%% ===========================================================================
+\IdefineField{documentLanguage}{de}   % de | en
+\IdefineField{reportKind}{project}    % project | seminar | term | lab | internship | master | custom
+\IdefineField{studycourse}{DS}        % DS | custom
+\IdefineField{Cover}{HAWKiel}         % HAWKiel | Leitfaden | Simple | none
+\IdefineField{citationStyle}{numeric} % numeric | authoryear
+\IdefineField{fontStyle}{serif}       % serif | sans
+\IdefineField{lineSpacing}{onehalf}   % single | onehalf | double
+
+% Custom report kind: \reportKindCustom{German name}{English name}
+\newcommand{\IreportKindCustomDE}{}
+\newcommand{\IreportKindCustomEN}{}
+\newcommand{\reportKindCustom}[2]{%
+  \renewcommand{\IreportKind}{custom}%
+  \renewcommand{\IreportKindCustomDE}{#1}%
+  \renewcommand{\IreportKindCustomEN}{#2}}
+
+% Study programme data (filled by a preset or \studycourseCustom)
+\newcommand{\IcourseDE}{}
+\newcommand{\IcourseEN}{}
+\newcommand{\IdegreeName}{}
+\newcommand{\IdegreeShort}{}
+\newcommand{\IfacultyDE}{}
+\newcommand{\IfacultyEN}{}
+
+% Custom study programme:
+% \studycourseCustom{Programme DE}{Programme EN}{Degree}{Abbr.}{Faculty DE}{Faculty EN}
+\newcommand{\studycourseCustom}[6]{%
+  \renewcommand{\Istudycourse}{custom}%
+  \renewcommand{\IcourseDE}{#1}\renewcommand{\IcourseEN}{#2}%
+  \renewcommand{\IdegreeName}{#3}\renewcommand{\IdegreeShort}{#4}%
+  \renewcommand{\IfacultyDE}{#5}\renewcommand{\IfacultyEN}{#6}}
+
+%% ===========================================================================
+%% 5. Page layout
+%% ===========================================================================
+
+% Exact page margins: \pageMargins{left}{right}{top}{bottom}
+% Without this command the KOMA-Script type area (DIV/BCOR in report.tex) is
+% used. Loads the geometry package, so it must be used in the preamble
+% (i.e. in configuration.tex) and only once.
+% Faculty of Media guideline: \pageMargins{3cm}{2cm}{2.5cm}{2.5cm}
+\newcommand{\pageMargins}[4]{%
+  \RequirePackage[left=#1,right=#2,top=#3,bottom=#4]{geometry}}
+
+%% ===========================================================================
+%% 6. Resolving the configuration
+%%    Runs at the end of the preamble, so the order of the commands in
+%%    configuration.tex does not matter.
+%% ===========================================================================
+\newif\ifIfound
+\newif\ifIIsThesis
+
+% resolved values
+\newcommand{\IreportKindDE}{}
+\newcommand{\IreportKindEN}{}
+\newcommand{\IreportKindName}{}
+\newcommand{\Icourse}{}
+\newcommand{\Ifaculty}{}
+\newcommand{\Iuniversity}{}
+\newcommand{\IstudyCourseDisplay}{}
+\newcommand{\IkeyWords}{}
+\newcommand{\IBibStyle}{unsrtnat}
+
+% \IkindCase{key}{German}{English}
+\newcommand{\IkindCase}[3]{%
+  \ifthenelse{\equal{\IreportKind}{#1}}{%
+    \renewcommand{\IreportKindDE}{#2}\renewcommand{\IreportKindEN}{#3}\Ifoundtrue}{}}
+
+\AtEndPreamble{%
+  % --- Language -------------------------------------------------------------
+  \ifthenelse{\equal{\IdocumentLanguage}{en}}{\IEnglishtrue}{%
+    \ifthenelse{\equal{\IdocumentLanguage}{de}}{\IEnglishfalse}{%
+      \IConfigError{documentLanguage}{\IdocumentLanguage}}}%
+  %
+  % --- Report kind ------------------------------------------------------------
+  % New report kind? Add a line \IkindCase{...}{...}{...} here.
+  \Ifoundfalse
+  \IkindCase{project}{Projektbericht}{Project Report}%
+  \IkindCase{seminar}{Seminararbeit}{Seminar Paper}%
+  \IkindCase{term}{Hausarbeit}{Term Paper}%
+  \IkindCase{lab}{Laborbericht}{Lab Report}%
+  \IkindCase{internship}{Praktikumsbericht}{Internship Report}%
+  \IkindCase{master}{Masterarbeit}{Master's Thesis}%
+  \IkindCase{custom}{\IreportKindCustomDE}{\IreportKindCustomEN}%
+  \ifIfound\else\IConfigError{reportKind}{\IreportKind}\fi
+  \ifthenelse{\equal{\IreportKind}{master}}{\IIsThesistrue}{\IIsThesisfalse}%
+  %
+  % --- Study programme --------------------------------------------------------
+  % New study programme? Add another \ifthenelse block here.
+  \Ifoundfalse
+  \ifthenelse{\equal{\Istudycourse}{DS}}{%
+    \renewcommand{\IcourseDE}{Data Science}%
+    \renewcommand{\IcourseEN}{Data Science}%
+    \renewcommand{\IdegreeName}{Master of Science}%
+    \renewcommand{\IdegreeShort}{M.Sc.}%
+    \renewcommand{\IfacultyDE}{Fachbereich Medien}%
+    \renewcommand{\IfacultyEN}{Faculty of Media}%
+    \Ifoundtrue}{}%
+  \ifthenelse{\equal{\Istudycourse}{custom}}{\Ifoundtrue}{}%
+  \ifIfound\else\IConfigError{studycourse}{\Istudycourse}\fi
+  %
+  % --- Language-dependent values ----------------------------------------------
+  \ifIEnglish
+    \let\IreportKindName\IreportKindEN
+    \let\Icourse\IcourseEN
+    \let\Ifaculty\IfacultyEN
+    \let\Iuniversity\IuniversityEN
+    \let\IkeyWords\IkeywordsEN
+  \else
+    \let\IreportKindName\IreportKindDE
+    \let\Icourse\IcourseDE
+    \let\Ifaculty\IfacultyDE
+    \let\Iuniversity\IuniversityDE
+    \let\IkeyWords\IkeywordsDE
+  \fi
+  \renewcommand{\IstudyCourseDisplay}{%
+    \Icourse\ifdefempty{\IdegreeShort}{}{ (\IdegreeShort)}}%
+  %
+  % --- Titles for the abstract page -------------------------------------------
+  \ifdefempty{\IreportTitleDE}{\let\IreportTitleDE\IreportTitle}{}%
+  \ifdefempty{\IreportTitleEN}{\let\IreportTitleEN\IreportTitle}{}%
+  %
+  % --- Supervisor labels ------------------------------------------------------
+  \ifdefempty{\IfirstSupervisorLabel}{%
+    \ifIIsThesis
+      \renewcommand{\IfirstSupervisorLabel}{\IbyLang{Erstprüfer:in}{First examiner}}%
+    \else
+      \renewcommand{\IfirstSupervisorLabel}{\IbyLang{Betreuung}{Supervisor}}%
+    \fi}{}%
+  \ifdefempty{\IsecondSupervisorLabel}{%
+    \ifIIsThesis
+      \renewcommand{\IsecondSupervisorLabel}{\IbyLang{Zweitprüfer:in}{Second examiner}}%
+    \else
+      \renewcommand{\IsecondSupervisorLabel}{\IbyLang{Zweitbetreuung}{Second supervisor}}%
+    \fi}{}%
+  %
+  % --- Accent colour ----------------------------------------------------------
+  \edef\Itmp{\noexpand\definecolor{IAccent}{HTML}{\IaccentColor}}\Itmp
+  %
+  % --- Font style -------------------------------------------------------------
+  \ifthenelse{\equal{\IfontStyle}{sans}}{%
+    \renewcommand{\familydefault}{\sfdefault}}{%
+    \ifthenelse{\equal{\IfontStyle}{serif}}{}{%
+      \IConfigError{fontStyle}{\IfontStyle}}}%
+  %
+  % --- Line spacing -----------------------------------------------------------
+  \ifthenelse{\equal{\IlineSpacing}{single}}{\singlespacing}{%
+    \ifthenelse{\equal{\IlineSpacing}{onehalf}}{\onehalfspacing}{%
+      \ifthenelse{\equal{\IlineSpacing}{double}}{\doublespacing}{%
+        \IConfigError{lineSpacing}{\IlineSpacing}}}}%
+  %
+  % --- Citation style ---------------------------------------------------------
+  \ifthenelse{\equal{\IcitationStyle}{numeric}}{%
+    \setcitestyle{numbers,square}\renewcommand{\IBibStyle}{unsrtnat}}{%
+    \ifthenelse{\equal{\IcitationStyle}{authoryear}}{%
+      \setcitestyle{authoryear,round}\renewcommand{\IBibStyle}{plainnat}}{%
+      \IConfigError{citationStyle}{\IcitationStyle}}}%
+  %
+  % --- Units ------------------------------------------------------------------
+  \ifIEnglish\sisetup{locale=UK}\else\sisetup{locale=DE}\fi
+  %
+  % --- Check cover ------------------------------------------------------------
+  % New cover page? Add its name here and in \ICoverPage (section 7).
+  \ifthenelse{\equal{\ICover}{HAWKiel}\OR\equal{\ICover}{Leitfaden}%
+      \OR\equal{\ICover}{Simple}\OR\equal{\ICover}{none}}{}{%
+    \IConfigError{Cover}{\ICover}}%
+}
+
+\AtBeginDocument{%
+  % Activate the language (hyphenation, "Contents"/"Inhaltsverzeichnis", ...)
+  \ifIEnglish\selectlanguage{english}\else\selectlanguage{ngerman}\fi
+  \normalfont   % make sure \fontStyle is applied
+  %
+  % Names for source code listings
+  \renewcommand{\lstlistingname}{\IbyLang{Quellcode}{Listing}}%
+  \renewcommand{\lstlistlistingname}{\IbyLang{Quellcodeverzeichnis}{List of Listings}}%
+  \def\lstlistingautorefname{\lstlistingname}%   for \autoref{lst:...}
+  %
+  % PDF metadata
+  \hypersetup{
+    pdftitle={\IreportTitle},
+    pdfauthor={\IreportAuthor},
+    pdfsubject={\IreportKindName},
+    pdfkeywords={\IkeyWords}
+  }%
+  %
+  % Draft mode
+  \ifIDraft
+    \cfoot*{\footnotesize\color{gray}\IbyLang{Entwurf}{Draft} -- \today}%
+  \else
+    \renewcommand{\todo}[2][]{\@bsphack\@esphack}%
+    \renewcommand{\listoftodos}[1][]{}%
+    \renewcommand{\missingfigure}[2][]{}%
+  \fi
+}
+
+%% ===========================================================================
+%% 7. Building blocks for report.tex and the pages in style/pages/
+%% ===========================================================================
+
+% --- Logo (with placeholder if no file exists) --------------------------------
+\newcommand{\ILogoPlaceholder}{%
+  \PackageWarning{configurationcommands}{%
+    Logo file \IlogoFile.pdf/.png/.jpg not found.\MessageBreak
+    Using a placeholder. See style/logo/README.md}%
+  \fcolorbox{IAccent}{white}{%
+    \parbox[c][\IlogoHeight][c]{45mm}{\centering\sffamily\color{IAccent}%
+      {\bfseries \IuniversityShort}\\[0.3ex]{\tiny Logo placeholder}}}}
+\newcommand{\ILogo}{%
+  \IfFileExists{\IlogoFile.pdf}{\includegraphics[height=\IlogoHeight,width=\linewidth,keepaspectratio]{\IlogoFile.pdf}}{%
+  \IfFileExists{\IlogoFile.png}{\includegraphics[height=\IlogoHeight,width=\linewidth,keepaspectratio]{\IlogoFile.png}}{%
+  \IfFileExists{\IlogoFile.jpg}{\includegraphics[height=\IlogoHeight,width=\linewidth,keepaspectratio]{\IlogoFile.jpg}}{%
+  \ILogoPlaceholder}}}}
+
+% --- Confidentiality notice ---------------------------------------------------
+\newcommand{\INDAText}{\IbyLang{STRENG VERTRAULICH}{STRICTLY CONFIDENTIAL}}
+
+% --- Info line "label  value" (omitted if the value is empty) -----------------
+\newlength{\IinfoLabelWidth}
+\setlength{\IinfoLabelWidth}{38mm}
+\newcommand{\Iinfoline}[2]{%
+  \ifdefempty{#2}{}{%
+    \begingroup
+    \setlength{\parfillskip}{0pt plus 1fil}% KOMA parskip adds 1em otherwise
+    \noindent
+    \parbox[t]{\IinfoLabelWidth}{\raggedright\bfseries #1}%
+    \parbox[t]{\dimexpr\linewidth-\IinfoLabelWidth\relax}{\raggedright #2}\par
+    \endgroup
+    \smallskip}}
+
+% Labels used on several pages
+\newcommand{\ILabelSemesterOfStudy}{\IbyLang{Fachsemester}{Semester of study}}
+\newcommand{\ILabelMatriculation}{\IbyLang{Matrikelnummer}{Student ID}}
+
+% Block with all details (cover, title page)
+\newcommand{\IInfoBlock}{%
+  \Iinfoline{\IbyLang{Modul}{Module}}{\ImoduleName}%
+  \Iinfoline{\IbyLang{Semester}{Term}}{\Isemester}%
+  \Iinfoline{\IbyLang{Studiengang}{Degree programme}}{\IstudyCourseDisplay}%
+  \Iinfoline{\ILabelSemesterOfStudy}{\IsemesterOfStudy}%
+  \Iinfoline{\IbyLang{Kooperation}{In cooperation with}}{\IcooperationPartner}%
+  \Iinfoline{\IfirstSupervisorLabel}{\IfirstSupervisor}%
+  \Iinfoline{\IsecondSupervisorLabel}{\IsecondSupervisor}%
+  \Iinfoline{\IbyLang{Abgabedatum}{Submission date}}{\IsubmissionDate}%
+}
+
+% Matriculation number and e-mail (below the name)
+\newcommand{\IAuthorDetails}{%
+  \ifdefempty{\ImatriculationNumber}{}{%
+    \ILabelMatriculation: \ImatriculationNumber\par}%
+  \ifdefempty{\IauthorEmail}{}{\href{mailto:\IauthorEmail}{\IauthorEmail}\par}}
+
+% One block of the abstract page
+% \IAbstractBlock{label title}{\title}{label keywords}{\keywords}{label text}{\text}
+\newcommand{\IAbstractBlock}[6]{%
+  \ifdefempty{#6}{}{%
+    \textbf{\IreportAuthor}\par\smallskip
+    \textbf{#1}\par
+    \Iinline{#2}\par\smallskip
+    \ifdefempty{#4}{}{\textbf{#3}\par #4\par\smallskip}%
+    \textbf{#5}\par
+    #6\par
+    \vspace{1cm}}}
+
+% --- Pages ------------------------------------------------------------------
+% New cover page? Add a line here and its name in "Check cover" (section 6).
+\newcommand{\ICoverPage}{%
+  \ifthenelse{\equal{\ICover}{HAWKiel}}{\input{\StyleDir/pages/cover_hawkiel}}{}%
+  \ifthenelse{\equal{\ICover}{Leitfaden}}{\input{\StyleDir/pages/cover_leitfaden}}{}%
+  \ifthenelse{\equal{\ICover}{Simple}}{\input{\StyleDir/pages/cover_simple}}{}}
+\newcommand{\IFrontMatter}{\pagenumbering{roman}}
+\newcommand{\ITitlePage}{\ifITitlePage\input{\StyleDir/pages/titlepage}\fi}
+\newcommand{\IAbstractPage}{\ifIAbstractPage\input{\StyleDir/pages/abstractpage}\fi}
+\newcommand{\IStatementPage}{\ifIStatement\input{\StyleDir/pages/statement}\fi}
+\newcommand{\IMainMatter}{\clearpage\pagenumbering{arabic}}
+
+% --- Lists --------------------------------------------------------------------
+\newcommand{\ITableOfContents}{\ifITableOfContents\tableofcontents\fi}
+\newcommand{\IListOfFigures}{\ifIListOfFigures\listoffigures\fi}
+\newcommand{\IListOfTables}{\ifIListOfTables\listoftables\fi}
+\newcommand{\IListOfListings}{\ifIListOfListings\lstlistoflistings\fi}
+\newcommand{\IListOfAcronyms}{%
+  \ifIListOfAcronyms
+    \printglossary[type=\acronymtype,
+      title={\IbyLang{Abkürzungsverzeichnis}{List of Abbreviations}}]%
+  \fi}
+\newcommand{\IListOfSymbols}{%
+  \ifIListOfSymbols
+    \printglossary[type=symbols,
+      title={\IbyLang{Symbolverzeichnis}{List of Symbols}}]%
+  \fi}
+\newcommand{\IGlossary}{%
+  \ifIGlossary
+    \printglossary[title={\IbyLang{Glossar}{Glossary}}]%
+  \fi}
+\newcommand{\IBibliography}{%
+  \ifIBibliography
+    \bibliographystyle{\IBibStyle}%
+    \bibliography{\IbibliographyFile}%
+  \fi}

@@ -1,0 +1,52 @@
+% !TEX root = ../../template/report.tex
+%%
+%% Inner title page (optional, mainly for the master's thesis).
+%% Enable in configuration.tex: \TitlePage{yes}
+%%
+\clearpage
+\thispagestyle{empty}
+{\sffamily
+  \setlength{\parskip}{0pt}
+  \begin{center}
+    \vspace*{10mm}
+    {\large \IreportAuthor\par}
+    \vspace{15mm}
+    {\LARGE\bfseries \IreportTitle\par}
+    \ifdefempty{\IreportSubtitle}{}{%
+      \vspace{4mm}{\large \IreportSubtitle\par}}
+  \end{center}
+
+  \vfill
+
+  \noindent
+  \begin{minipage}{\textwidth}
+    \raggedright
+    \ifIEnglish
+      \IreportKindName{}
+      \ifIIsThesis
+        submitted for the degree of \IdegreeName{} (\IdegreeShort)%
+      \else
+        \ifdefempty{\ImoduleName}{}{for the module \textit{\ImoduleName}}%
+      \fi\\
+      in the degree programme \textit{\Icourse}\\
+      at the \Ifaculty\\
+      of \Iuniversity
+    \else
+      \IreportKindName{}
+      \ifIIsThesis
+        eingereicht zur Erlangung des akademischen Grades \IdegreeName{} (\IdegreeShort)%
+      \else
+        \ifdefempty{\ImoduleName}{}{im Modul \textit{\ImoduleName}}%
+      \fi\\
+      im Studiengang \textit{\Icourse}\\
+      am \Ifaculty\\
+      der \Iuniversity
+    \fi
+    \par\vspace{8mm}
+    \Iinfoline{\IfirstSupervisorLabel}{\IfirstSupervisor}%
+    \Iinfoline{\IsecondSupervisorLabel}{\IsecondSupervisor}%
+    \Iinfoline{\IbyLang{Kooperation}{In cooperation with}}{\IcooperationPartner}%
+    \Iinfoline{\IbyLang{Abgabedatum}{Submission date}}{\IsubmissionDate}%
+  \end{minipage}
+}
+\clearpage

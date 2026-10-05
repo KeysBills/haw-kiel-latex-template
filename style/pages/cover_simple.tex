@@ -1,0 +1,38 @@
+% !TEX root = ../../template/report.tex
+%%
+%% Cover page "Simple": classic, centred.
+%% Select in configuration.tex: \Cover{Simple}
+%%
+\begin{titlepage}
+  \sffamily
+  \setlength{\parskip}{0pt}
+  \centering
+
+  \ifINDA{\large\bfseries\color{IAccent}\INDAText\par}\vspace{5mm}\fi
+
+  \ifILogo\ILogo\par\vspace{8mm}\fi
+
+  {\large \Iuniversity\par}
+  \vspace{1mm}
+  {\Ifaculty\par}
+
+  \vspace{30mm}
+
+  {\Large \IreportKindName\par}
+  \vspace{8mm}
+  {\LARGE\bfseries \IreportTitle\par}
+  \ifdefempty{\IreportSubtitle}{}{%
+    \vspace{4mm}{\Large \IreportSubtitle\par}}
+
+  \vspace{15mm}
+  {\large \IreportAuthor\par}
+  \vspace{1mm}
+  {\small \IAuthorDetails}
+
+  \vfill
+
+  \begin{minipage}{0.8\textwidth}
+    \raggedright\small
+    \IInfoBlock
+  \end{minipage}
+\end{titlepage}

@@ -1,0 +1,30 @@
+# latexmk configuration of the report template
+# Run in the report folder:  latexmk report.tex
+#
+# Builds the PDF with pdflatex and runs BibTeX and makeindex for
+# abbreviations, glossary and symbols as often as necessary.
+
+$pdf_mode = 1;            # pdflatex
+$bibtex_use = 2;          # run BibTeX; delete .bbl on cleanup
+$pdflatex = 'pdflatex -interaction=nonstopmode -file-line-error -synctex=1 %O %S';
+
+# Glossary (glossaries: .glo -> .gls)
+add_cus_dep('glo', 'gls', 0, 'makeglo2gls');
+sub makeglo2gls {
+    return system("makeindex -s \"$_[0].ist\" -t \"$_[0].glg\" -o \"$_[0].gls\" \"$_[0].glo\"");
+}
+
+# Abbreviations (glossaries option acronym: .acn -> .acr)
+add_cus_dep('acn', 'acr', 0, 'makeacn2acr');
+sub makeacn2acr {
+    return system("makeindex -s \"$_[0].ist\" -t \"$_[0].alg\" -o \"$_[0].acr\" \"$_[0].acn\"");
+}
+
+# Symbols (glossaries option symbols: .slo -> .sls)
+add_cus_dep('slo', 'sls', 0, 'makeslo2sls');
+sub makeslo2sls {
+    return system("makeindex -s \"$_[0].ist\" -t \"$_[0].slg\" -o \"$_[0].sls\" \"$_[0].slo\"");
+}
+
+# Additional files removed by "latexmk -c"
+$clean_ext .= ' acn acr alg glo gls glg slo sls slg ist lol run.xml synctex.gz tdo';

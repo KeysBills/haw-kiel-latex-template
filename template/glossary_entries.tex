@@ -1,0 +1,28 @@
+% !TEX root = ./report.tex
+%%
+%% Entries for the lists of abbreviations and symbols and the glossary.
+%% Only entries used in the text with \gls{...} appear in the lists.
+%% Every label may only be used once.
+%%
+%% Usage in the text:
+%%   \gls{ac:ml}     -> first use "Machine Learning (ML)", afterwards "ML"
+%%   \glspl{ac:ml}   -> plural
+%%   \acrlong{ac:ml} / \acrshort{ac:ml} -> always long or short form
+%%
+
+%% --- Abbreviations ---------------------------------------------------------------
+\newacronym{ac:ml}{ML}{Machine Learning}
+\newacronym{ac:haw}{HAW}{Hochschule für Angewandte Wissenschaften}
+\newacronym{ac:crispdm}{CRISP-DM}{Cross Industry Standard Process for Data Mining}
+
+%% --- Glossary -------------------------------------------------------------------
+\newglossaryentry{gl:feature}{
+  name={Feature},
+  description={Messbare Eigenschaft eines Datenpunkts, die als Eingabe für ein Modell dient}}
+
+%% --- Symbols -------------------------------------------------------------------
+\newglossaryentry{sy:loss}{
+  type=symbols,
+  name={\ensuremath{\mathcal{L}}},
+  sort={L},
+  description={Verlustfunktion}}

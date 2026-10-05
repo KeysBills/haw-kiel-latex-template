@@ -1,0 +1,152 @@
+% !TEX root = ../report.tex
+%%
+%% Configuration of this report
+%%
+%% - Every line is optional: if a command is missing, the default applies (in [ ]).
+%% - The order does not matter.
+%% - Text fields left empty ({}) are not shown in the document.
+%% - Invalid values produce a readable error message.
+%% Full reference: README.md, section "Configuration reference".
+%%
+
+%% ===========================================================================
+%% Language and kind of report
+%% ===========================================================================
+
+% Document language: de | en                                           [de]
+% (controls hyphenation, headings such as "Contents"/"Inhaltsverzeichnis",
+%  cover page, declaration, ...)
+\documentLanguage{de}
+
+% Kind of report                                                       [project]
+%   project    -> Projektbericht    / Project Report
+%   seminar    -> Seminararbeit     / Seminar Paper
+%   term       -> Hausarbeit        / Term Paper
+%   lab        -> Laborbericht      / Lab Report
+%   internship -> Praktikumsbericht / Internship Report
+%   master     -> Masterarbeit      / Master's Thesis
+\reportKind{project}
+% ... or a custom name (German, English):
+% \reportKindCustom{Fallstudie}{Case Study}
+
+%% ===========================================================================
+%% Title and author(s)
+%% ===========================================================================
+
+% Title; manual line breaks with \\ are allowed
+\reportTitle{Titel des Berichts}
+% Subtitle (optional)
+\reportSubtitle{Untertitel des Berichts}
+% Titles for the abstract page (optional, without line breaks; empty = \reportTitle)
+\reportTitleDE{}
+\reportTitleEN{}
+
+% Name(s); for group work e.g. {Erika Muster \\ Max Mustermann}
+\reportAuthor{Vorname Nachname}
+\matriculationNumber{123456}
+\authorEmail{}
+% Postal address (optional, only shown on \Cover{Leitfaden})
+\authorAddress{}
+
+%% ===========================================================================
+%% Course and supervision
+%% ===========================================================================
+
+\moduleName{Name des Moduls}
+% Academic term, e.g. {Wintersemester 2026/27} or {Winter term 2026/27}
+\semester{Wintersemester 2026/27}
+% Semester of study ("Fachsemester"), e.g. {2}
+\semesterOfStudy{}
+
+% Degree programme                                                     [DS]
+%   DS -> Data Science (M.Sc.), Faculty of Media, HAW Kiel
+\studycourse{DS}
+% ... or another programme:
+% \studycourseCustom{Studiengang}{Study programme}{Master of Science}{M.Sc.}{Fachbereich X}{Faculty of X}
+
+% Supervisors (leave empty if not needed).
+% The label is set automatically: "Betreuung"/"Supervisor" or, with
+% \reportKind{master}, "Erstprüfer:in"/"First examiner". Custom label:
+% \firstSupervisor[Dozent]{Prof. Dr. ...}
+\firstSupervisor{Prof. Dr. Vorname Nachname}
+\secondSupervisor{}
+
+% Company for practical/cooperation projects (optional)
+\cooperationPartner{}
+
+% Submission (date as text, e.g. {15.03.2027})                         [\today]
+\submissionDate{\today}
+\submissionPlace{Kiel}
+
+% University (only change if necessary): [short name]{German}{English}
+% \university[HAW Kiel]{Hochschule für Angewandte Wissenschaften Kiel}{Kiel University of Applied Sciences}
+
+%% ===========================================================================
+%% Abstract
+%% (a block only appears if its text is set)
+%% ===========================================================================
+
+\keywordsDE{Stichwort 1, Stichwort 2, Stichwort 3}
+\keywordsEN{Keyword 1, Keyword 2, Keyword 3}
+
+\abstractDE{Hier steht eine kurze Zusammenfassung des Berichts (ca. 150--250 Wörter).}
+\abstractEN{A short summary of the report goes here (approx.\ 150--250 words).}
+
+%% ===========================================================================
+%% Document structure – switches: yes | no
+%% ===========================================================================
+
+\NDA{no}               % confidentiality notice on the cover                  [no]
+\TitlePage{no}         % additional inner title page (e.g. master's thesis)  [no]
+\AbstractPage{yes}     % abstract page                                        [yes]
+\TableOfContents{yes}  % table of contents                                    [yes]
+\ListOfFigures{yes}    % list of figures                                      [yes]
+\ListOfTables{yes}     % list of tables                                       [yes]
+\ListOfListings{yes}   % list of listings                                     [no]
+\ListOfAcronyms{yes}   % list of abbreviations                                [yes]
+\ListOfSymbols{yes}    % list of symbols                                      [no]
+\Glossary{yes}         % glossary at the end                                  [no]
+\Bibliography{yes}     % bibliography                                         [yes]
+\Statement{yes}        % declaration of authorship                            [yes]
+\AIStatement{no}       % paragraph on AI tools in the declaration             [no]
+\Draft{yes}            % draft: \todo notes + date in the footer              [no]
+
+% AI tools used (only relevant with \AIStatement{yes};
+% empty = declaration that no AI tools were used)
+\aiUsage{}
+
+%% ===========================================================================
+%% Layout
+%% ===========================================================================
+
+% Cover page: HAWKiel | Leitfaden | Simple | none                      [HAWKiel]
+%   HAWKiel   -> modern, accent bar, logo top right
+%   Leitfaden -> follows the title page template of the Faculty of Media guideline
+%   Simple    -> classic, centred
+\Cover{HAWKiel}
+% Show the logo on the cover: yes | no                                 [yes]
+\Logo{yes}
+% Logo file without extension (.pdf, .png or .jpg)     [\StyleDir/logo/haw-kiel-logo]
+% \logoFile{\StyleDir/logo/haw-kiel-logo}
+% \logoHeight{18mm}
+
+% Exact page margins: {left}{right}{top}{bottom}        [KOMA type area, see report.tex]
+% Faculty of Media guideline: 3cm / 2cm / 2.5cm / 2.5cm (plus fontsize=12pt in report.tex)
+% \pageMargins{3cm}{2cm}{2.5cm}{2.5cm}
+
+% Accent colour as HTML code without # (lines on the cover, links)     [004B87]
+\accentColor{004B87}
+
+% Font: serif | sans                                                   [serif]
+\fontStyle{serif}
+% Line spacing: single | onehalf | double                              [onehalf]
+\lineSpacing{onehalf}
+
+%% ===========================================================================
+%% Bibliography
+%% ===========================================================================
+
+% Citation style: numeric -> [1]  |  authoryear -> (Hastie et al., 2009)  [numeric]
+\citationStyle{numeric}
+% Name of the BibTeX file without .bib                                 [literature]
+\bibliographyFile{literature}

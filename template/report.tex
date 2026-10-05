@@ -1,0 +1,71 @@
+% !TEX program = pdflatex
+% !TEX encoding = UTF-8
+%%
+%% Main file of a report – HAW Kiel report template
+%%
+%% Settings (title, author, kind of report, lists, ...) are NOT made here but
+%% in configuration/configuration.tex. This file only includes the chapters.
+%% Documentation: ../README.md
+%%
+
+% Path to the shared style folder (relative to this file)
+\newcommand{\StyleDir}{../style}
+\makeatletter\edef\input@path{{\StyleDir/}}\makeatother
+
+\documentclass[
+  a4paper,               % DIN A4
+  fontsize=11pt,         % font size (Faculty of Media guideline: 12pt)
+  DIV=10,                % type area (larger = narrower margins); ignored with \pageMargins
+  oneside,               % one-sided (twoside for double-sided printing)
+  BCOR=5mm,              % binding correction; ignored with \pageMargins
+  parskip=half,          % half a line between paragraphs
+  numbers=noenddot,      % no dot after chapter numbers
+  bibliography=totoc,    % bibliography in the table of contents
+  listof=totoc           % lists of figures/tables in the table of contents
+]{scrreprt}
+
+\usepackage{reportstyle}               % all packages and the layout (style/)
+\input{configuration/configuration}    % all settings of this report
+
+% Glossary, abbreviations, symbols
+\makeglossaries
+\loadglsentries{glossary_entries}
+
+% Additional packages/commands for this report go here, e.g.:
+% \usepackage{algorithm2e}
+% \DeclareSIUnit\fps{fps}
+
+\begin{document}
+
+%% --- Front matter ---------------------------------------------------------------
+\ICoverPage                 % cover page             (\Cover)
+\IFrontMatter               % roman page numbers
+\ITitlePage                 % inner title page       (\TitlePage)
+\IAbstractPage              % abstract               (\AbstractPage)
+\ITableOfContents           % table of contents      (\TableOfContents)
+\IListOfFigures             % list of figures        (\ListOfFigures)
+\IListOfTables              % list of tables         (\ListOfTables)
+\IListOfListings            % list of listings       (\ListOfListings)
+\IListOfAcronyms            % list of abbreviations  (\ListOfAcronyms)
+\IListOfSymbols             % list of symbols        (\ListOfSymbols)
+
+%% --- Main part --------------------------------------------------------------------
+\IMainMatter                % arabic page numbers
+\input{chapters/01_einleitung}
+\input{chapters/02_grundlagen}
+\input{chapters/03_methodik}
+\input{chapters/04_ergebnisse}
+\input{chapters/05_fazit}
+\input{chapters/99_beispiele}   % examples of figures, tables, code, ... -> delete!
+% add further chapters here
+
+%% --- Back matter ------------------------------------------------------------------
+\IBibliography              % bibliography           (\Bibliography, \citationStyle)
+
+\appendix                   % appendix (chapters A, B, ...); uncomment if needed
+% \input{appendix/a_anhang}
+
+\IGlossary                  % glossary               (\Glossary)
+\IStatementPage             % declaration of authorship (\Statement)
+
+\end{document}

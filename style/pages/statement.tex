@@ -1,0 +1,58 @@
+% !TEX root = ../../template/report.tex
+%%
+%% Declaration of authorship (German or English depending on the document language).
+%% Enable/disable: \Statement{yes|no}, paragraph on AI tools: \AIStatement{yes|no}
+%%
+%% IMPORTANT: The wording is generic. Check it against the applicable
+%% examination regulations or module requirements and adapt it if necessary.
+%%
+\addchap{\IbyLang{Eigenständigkeitserklärung}{Declaration of Authorship}}
+\thispagestyle{plain}
+
+\ifIEnglish
+  I hereby declare that I have written this \IreportKindName{} entitled
+  \enquote{\Iinline{\IreportTitle}} independently and that I have used no sources
+  or aids other than those indicated. All passages taken verbatim or in substance
+  from published or unpublished works have been marked as such. This work has not
+  been submitted in the same or a similar form to any other examination board.
+
+  \ifIAIStatement
+    \ifdefempty{\IaiUsage}{%
+      I have not used any tools based on generative artificial intelligence.}{%
+      I have used the following tools based on generative artificial intelligence:
+      \IaiUsage. I have critically reviewed all content generated in this way and
+      take full responsibility for this work.}
+  \fi
+\else
+  Hiermit versichere ich, dass ich die vorliegende \IreportKindName{} mit dem Titel
+  \enquote{\Iinline{\IreportTitle}} selbstständig verfasst und keine anderen als die
+  angegebenen Quellen und Hilfsmittel benutzt habe. Alle Stellen, die wörtlich oder
+  sinngemäß aus veröffentlichten oder nicht veröffentlichten Werken entnommen wurden,
+  sind als solche kenntlich gemacht. Die Arbeit hat in gleicher oder ähnlicher Form
+  noch keiner anderen Prüfungsbehörde vorgelegen.
+
+  \ifIAIStatement
+    \ifdefempty{\IaiUsage}{%
+      Werkzeuge auf Basis generativer künstlicher Intelligenz habe ich nicht verwendet.}{%
+      Folgende Werkzeuge auf Basis generativer künstlicher Intelligenz habe ich
+      verwendet: \IaiUsage. Die damit erzeugten Inhalte habe ich kritisch geprüft;
+      ich übernehme die volle Verantwortung für die Arbeit.}
+  \fi
+\fi
+
+\vspace{25mm}
+
+\noindent
+\begin{minipage}[b]{0.42\textwidth}
+  \centering
+  \IsubmissionPlace\ifdefempty{\IsubmissionDate}{}{, \IsubmissionDate}\\[-0.8ex]
+  \rule{\linewidth}{0.4pt}\\
+  {\footnotesize \IbyLang{Ort, Datum}{Place, date}}
+\end{minipage}%
+\hfill
+\begin{minipage}[b]{0.48\textwidth}
+  \centering
+  \mbox{}\\[-0.8ex]
+  \rule{\linewidth}{0.4pt}\\
+  {\footnotesize \IbyLang{Unterschrift}{Signature}\quad(\IreportAuthor)}
+\end{minipage}

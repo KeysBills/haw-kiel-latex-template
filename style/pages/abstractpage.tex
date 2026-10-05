@@ -1,0 +1,17 @@
+% !TEX root = ../../template/report.tex
+%%
+%% Page with the German ("Kurzfassung") and English abstract.
+%% A block only appears if its text (\abstractDE / \abstractEN) is set in
+%% configuration.tex. The document language comes first.
+%% Disable: \AbstractPage{no}
+%%
+\clearpage
+\thispagestyle{plain}
+\ifIEnglish
+  \IAbstractBlock{Title}{\IreportTitleEN}{Keywords}{\IkeywordsEN}{Abstract}{\IabstractEN}
+  \IAbstractBlock{Thema der Arbeit}{\IreportTitleDE}{Stichworte}{\IkeywordsDE}{Kurzzusammenfassung}{\IabstractDE}
+\else
+  \IAbstractBlock{Thema der Arbeit}{\IreportTitleDE}{Stichworte}{\IkeywordsDE}{Kurzzusammenfassung}{\IabstractDE}
+  \IAbstractBlock{Title}{\IreportTitleEN}{Keywords}{\IkeywordsEN}{Abstract}{\IabstractEN}
+\fi
+\clearpage

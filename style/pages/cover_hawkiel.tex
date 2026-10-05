@@ -1,0 +1,55 @@
+% !TEX root = ../../template/report.tex
+%%
+%% Cover page "HAWKiel": logo top right, accent bar, left-aligned title,
+%% details at the bottom, university and faculty in the footer bar.
+%% Select in configuration.tex: \Cover{HAWKiel}
+%%
+\begin{titlepage}
+  \sffamily
+  \setlength{\parskip}{0pt}
+  \setlength{\parindent}{0pt}
+  \raggedright
+
+  % --- Header: confidentiality notice left, logo right -----------------------
+  \begin{minipage}[t]{0.4\textwidth}
+    \vspace{0pt}
+    \ifINDA{\large\bfseries\color{IAccent}\INDAText}\fi
+  \end{minipage}%
+  \hfill
+  \begin{minipage}[t]{0.58\textwidth}
+    \vspace{0pt}\raggedleft
+    \ifILogo\ILogo\fi
+  \end{minipage}
+
+  \vspace{38mm}
+
+  % --- Kind of work ---------------------------------------------------------
+  {\color{IAccent}\rule{30mm}{1.5mm}}\par
+  \vspace{7mm}
+  {\small\bfseries\color{IAccent}\MakeUppercase{\IreportKindName}\par}
+  \vspace{4mm}
+
+  % --- Title ----------------------------------------------------------------
+  {\fontsize{22pt}{27pt}\selectfont\bfseries \IreportTitle\par}
+  \ifdefempty{\IreportSubtitle}{}{%
+    \vspace{4mm}{\Large \IreportSubtitle\par}}
+  \vspace{12mm}
+
+  % --- Author(s) ------------------------------------------------------------
+  {\large\bfseries \IreportAuthor\par}
+  \vspace{1mm}
+  {\small \IAuthorDetails}
+
+  \vfill
+
+  % --- Details --------------------------------------------------------------
+  {\small \IInfoBlock}
+  \vspace{8mm}
+
+  % --- Footer bar: university -----------------------------------------------
+  {\color{IAccent}\hrule height 0.6mm}
+  \vspace{2mm}
+  {\small\bfseries \Iuniversity\par}
+  {\small \Ifaculty\par}
+  \ifIEnglish\else{\footnotesize\color{gray} \IuniversityEN\par}\fi
+\end{titlepage}

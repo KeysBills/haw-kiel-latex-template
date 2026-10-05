@@ -1,0 +1,28 @@
+%%
+%% convenience.sty
+%% Helper commands for everyday writing
+%%
+%% Author:  Yaacoub Harkat
+%% Based on the HAW Hamburg thesis template (Thomas Lehmann, Edgar Toll).
+%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{\@currpath convenience}[2026/10/05 v1.1 Helper commands of the report template]
+
+% Single image with caption and label "fig:<file name>"
+%   \includenamedimage[<width relative to \textwidth>]{<file without extension>}{<caption>}
+%   Example: \includenamedimage[0.6]{architecture}{System architecture}
+%            -> reference with \ref{fig:architecture}
+\newcommand{\includenamedimage}[3][0.8]{%
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=#1\textwidth]{#2}
+    \caption{#3}
+    \label{fig:#2}
+  \end{figure}}
+
+% Text depending on the document language: \DeEn{German}{English}
+\newcommand{\DeEn}[2]{\IbyLang{#1}{#2}}
+
+% Omissions in quotations: [...]
+\newcommand{\bdots}{[.\kern\fontdimen3\font.\kern\fontdimen3\font.]}
+\newcommand{\fdots}{[\dots]}

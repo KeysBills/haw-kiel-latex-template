@@ -1,0 +1,36 @@
+{
+  // LaTeX Workshop: build with latexmk (reads the latexmkrc in the report folder)
+  "latex-workshop.latex.recipes": [
+    { "name": "latexmk (Vorlage)", "tools": ["latexmk-vorlage"] }
+  ],
+  "latex-workshop.latex.tools": [
+    {
+      "name": "latexmk-vorlage",
+      "command": "latexmk",
+      "args": ["-interaction=nonstopmode", "-file-line-error", "-synctex=1", "%DOC%"],
+      "env": {}
+    }
+  ],
+  "latex-workshop.latex.recipe.default": "first",
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.latex.outDir": "%DIR%",
+  "latex-workshop.view.pdf.viewer": "tab",
+  "latex-workshop.latex.autoClean.run": "never",
+  "latex-workshop.message.warning.show": false,
+
+  // Editor
+  "files.encoding": "utf8",
+  "[latex]": {
+    "editor.wordWrap": "on",
+    "editor.tabSize": 2
+  },
+  "files.exclude": {
+    "**/*.aux": true, "**/*.fdb_latexmk": true, "**/*.fls": true,
+    "**/*.glg": true, "**/*.glo": true, "**/*.gls": true, "**/*.ist": true,
+    "**/*.acn": true, "**/*.acr": true, "**/*.alg": true,
+    "**/*.slg": true, "**/*.slo": true, "**/*.sls": true,
+    "**/*.lof": true, "**/*.lot": true, "**/*.lol": true, "**/*.toc": true,
+    "**/*.out": true, "**/*.bbl": true, "**/*.blg": true, "**/*.tdo": true,
+    "**/*.synctex.gz": true
+  }
+}

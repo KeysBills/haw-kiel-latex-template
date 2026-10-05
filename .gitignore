@@ -1,0 +1,38 @@
+# LaTeX auxiliary files
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.lot
+*.lol
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.run.xml
+*.bcf
+*.tdo
+*.xdv
+# glossaries
+*.acn
+*.acr
+*.alg
+*.glo
+*.gls
+*.glg
+*.glsdefs
+*.ist
+*.slo
+*.sls
+*.slg
+# generated PDFs
+*/report.pdf
+
+# macOS
+.DS_Store
+
+
+# official logo (trademark – do not publish)
+style/logo/haw-kiel-logo.*

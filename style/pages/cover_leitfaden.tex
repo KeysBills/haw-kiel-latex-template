@@ -1,0 +1,74 @@
+% !TEX root = ../../template/report.tex
+%%
+%% Cover page "Leitfaden": follows the title page template ("Formatvorlage
+%% Deckblatt") of the guideline for academic work of the Faculty of Media,
+%% HAW Kiel (Leitfaden für Wissenschaftliche Arbeiten, as of 19 Jan 2026).
+%% Select in configuration.tex: \Cover{Leitfaden}
+%%
+%% Order of the elements as in the guideline:
+%%   HAW Kiel, faculty, kind of work, full title, "submitted by", name,
+%%   address (optional), e-mail (optional), matriculation number,
+%%   semester of study, degree programme, submission date, examiners.
+%%
+\begin{titlepage}
+  \sffamily
+  \setlength{\parskip}{0pt}
+  \setlength{\parindent}{0pt}
+  % "Label: value" line, omitted if the value is empty
+  \def\ILfLine#1#2{%
+    \ifdefempty{#2}{}{%
+      \begingroup\setlength{\parfillskip}{0pt plus 1fil}%
+      \noindent\parbox[t]{45mm}{#1:}%
+      \parbox[t]{\dimexpr\linewidth-45mm\relax}{\raggedright #2}\par
+      \endgroup
+      \vspace{1.5mm}}}%
+
+  % --- Header: confidentiality notice left, logo right -----------------------
+  \begin{minipage}[t]{0.4\textwidth}
+    \vspace{0pt}
+    \ifINDA{\large\bfseries\color{IAccent}\INDAText}\fi
+  \end{minipage}%
+  \hfill
+  \begin{minipage}[t]{0.58\textwidth}
+    \vspace{0pt}\raggedleft
+    \ifILogo\ILogo\fi
+  \end{minipage}
+
+  \vspace{15mm}
+
+  % --- University and faculty -------------------------------------------------
+  \begin{center}
+    {\Large\bfseries \IuniversityShort\par}
+    \vspace{2mm}
+    {\large \Ifaculty\par}
+
+    \vspace{30mm}
+
+    % --- Kind of work and title -----------------------------------------------
+    {\large \IreportKindName\par}
+    \vspace{8mm}
+    {\LARGE\bfseries \IreportTitle\par}
+    \ifdefempty{\IreportSubtitle}{}{%
+      \vspace{4mm}{\large \IreportSubtitle\par}}
+  \end{center}
+
+  \vfill
+
+  % --- Submitted by -----------------------------------------------------------
+  {\bfseries \IbyLang{Vorgelegt von}{Submitted by}:\par}
+  \vspace{1.5mm}
+  \IreportAuthor\par
+  \ifdefempty{\IauthorAddress}{}{\IauthorAddress\par}
+  \ifdefempty{\IauthorEmail}{}{\href{mailto:\IauthorEmail}{\IauthorEmail}\par}
+  \vspace{6mm}
+
+  % --- Details ----------------------------------------------------------------
+  \ILfLine{\ILabelMatriculation}{\ImatriculationNumber}
+  \ILfLine{\ILabelSemesterOfStudy}{\IsemesterOfStudy}
+  \ILfLine{\IbyLang{Studiengang}{Degree programme}}{\IstudyCourseDisplay}
+  \ILfLine{\IbyLang{Modul}{Module}}{\ImoduleName}
+  \ILfLine{\IbyLang{Kooperation}{In cooperation with}}{\IcooperationPartner}
+  \ILfLine{\IbyLang{Abgabetermin}{Submission date}}{\IsubmissionDate}
+  \ILfLine{\IfirstSupervisorLabel}{\IfirstSupervisor}
+  \ILfLine{\IsecondSupervisorLabel}{\IsecondSupervisor}
+\end{titlepage}
